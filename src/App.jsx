@@ -11,7 +11,7 @@ function App() {
     const fetchMemes = async () => {
       try {
         setLoading(true)
-        const response = await api.get('/memes') // Changed endpoint to match base URL
+        const response = await api.get('')
         setMemes(response.data)
         setError(null)
       } catch (err) {
