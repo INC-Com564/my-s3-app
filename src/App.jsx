@@ -51,17 +51,30 @@ function App() {
           )}
   
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {!loading && !error && memes.map((meme) => (
-              <div key={meme.id} className="p-4 border rounded-lg shadow-md">
-                <h3 className="text-xl font-semibold mb-2">{meme.title}</h3>
-                <img 
-                  src={getCloudFrontUrl(meme.key)} 
-                  alt={meme.title}
-                  className="w-full h-auto rounded-md"
-                  loading="lazy"
-                />
-              </div>
-            ))}
+            {!loading && !error && memes.map((meme) => {
+              // If the backend returns a full URL, use it; otherwise, build from CloudFront + key
+              const imgSrc = meme?.url && /^https?:\/\//.test(meme.url)
+                ? meme.url
+                : (meme?.key ? getCloudFrontUrl(meme.key) : '');
+
+              return (
+                <div key={meme.id ?? imgSrc} className="p-4 border rounded-lg shadow-md">
+                  <h3 className="text-xl font-semibold mb-2">{meme.title ?? 'Untitled Meme'}</h3>
+                  {imgSrc ? (
+                    <img
+                      src={imgSrc}
+                      alt={meme.title ?? 'meme image'}
+                      className="w-full h-auto rounded-md"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-40 bg-gray-200 rounded-md flex items-center justify-center text-gray-500">
+                      No image
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
           <footer>&copy; Codex Academy March 2025 </footer>
         </main>

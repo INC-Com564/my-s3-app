@@ -12,7 +12,8 @@ export const s3Client = new S3Client({
 
 // CloudFront URL generator
 export const getCloudFrontUrl = (key) => {
-    return `https://${import.meta.env.VITE_CLOUDFRONT_DOMAIN}/${key}`;
+    const safeKey = String(key ?? '').replace(/^\/+/, ''); // trim any leading slash
+    return `https://${import.meta.env.VITE_CLOUDFRONT_DOMAIN}/${safeKey}`;
 };
 
 // Regular API client
